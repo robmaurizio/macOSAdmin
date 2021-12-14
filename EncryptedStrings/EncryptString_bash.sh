@@ -6,7 +6,7 @@
 # The 'Encrypted String' will become a parameter for the script in the JSS
 # The unique 'Salt' and 'Passphrase' values will be present in your script
 function GenerateEncryptedString() {
-    # Usage ~$ GenerateEncryptedString "String"
+    # Usage ~$ GenerateEncryptedString 'String'
     local STRING="${1}"
     local SALT=$(openssl rand -hex 8)
     local K=$(openssl rand -hex 12)
