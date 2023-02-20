@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+# Jamf parameters
+applicationlabel=$4
+notify=$5
+debug=$6
+
+latestReleaseURL=$(curl -s https://api.github.com/repos/Installomator/Installomator/releases/latest | grep "browser_download_url.*pkg" | cut -d '"' -f 4)
+
+echo $latestReleaseURL
+
+sudo curl -LJo /private/tmp/Installomator.pkg $latestReleaseURL
+/usr/bin/sudo installer -store -pkg /private/tmp/Installomator.pkg -target /
+
+# Install application based on arguments made in the jamf policy
+/usr/bin/sudo /usr/local/Installomator/Installomator.sh "${applicationlabel}" "NOTIFY=${notify}" "DEBUG=${debug}"
+
+sleep 2
+
+# Cleanup
+/usr/bin/sudo rm -rf /private/tmp/Installomator.pkg
+/usr/bin/sudo rm -rf /usr/local/Installomator
