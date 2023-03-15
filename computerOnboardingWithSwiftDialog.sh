@@ -85,63 +85,6 @@ if [ -f "/usr/local/bin/dialog" ]; then
 else
     jamf policy -event Install-swiftDialog -verbose
 fi
-####################################################################################################
-#
-# Pre-flight Checks
-#
-####################################################################################################
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Confirm script is running as root
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-if [[ $(id -u) -ne 0 ]]; then
-    echo "This script must be run as root; exiting."
-    exit 1
-fi
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Ensure computer does not go to sleep while running this script (thanks, @grahampugh!)
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-echo "Caffeinating this script (PID: $$)"
-caffeinate -dimsu -w $$ &
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Validate Setup Assistant has completed
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-while pgrep -q -x "Setup Assistant" ; do
-    echo "Setup Assistant is running; pausing for 3 seconds"
-    sleep 3
-done
-echo "Setup Assistant is no longer running; proceeding …"
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Confirm Dock is running / user is at Desktop
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-while ! pgrep -q -x "Dock" ; do
-    echo "Dock is NOT running; pausing for 3 seconds"
-    sleep 3
-done
-echo "Dock is running; proceeding …"
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Validate logged-in user
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
-
-if [[ -z "${loggedInUser}" || "${loggedInUser}" == "loginwindow" ]]; then
-    echo "No user logged-in; exiting."
-    exit 1
-else
-    loggedInUserID=$(id -u "${loggedInUser}")
-fi
 
 # # # PARAMETERS # # #
 echo "\nScript parameters..."
@@ -215,13 +158,14 @@ dialog_command_file="/var/tmp/dialog.log"
 ####################################################################################################
 
 function finalize(){
+  killProcess "caffeinate"
   echo "overlayicon: SF=checkmark.circle.fill,palette=green,white,none,bgcolor=none" >> "$dialog_command_file"
   echo "progresstext: Complete" >> "$dialog_command_file"
   echo "progress: complete" >> "$dialog_command_file"
   echo "message: Success!\n\nYour computer is set up and ready to use! Please click Finish to return to the Desktop." >> "$dialog_command_file"
   echo "button1text: Finish" >> "$dialog_command_file"
   echo "button1: enable" >> "$dialog_command_file"
-  exit 0
+  rm "$dialog_command_file"
 }
 
 
@@ -350,7 +294,6 @@ echo "progresstext: Just another few moments..." >> "$dialog_command_file"
 sleep 25
 
 # Close off processing and enable the "Done" button on the dialog box
-finalize
-
 echo "Exit script with success."
+finalize
 exit 0
