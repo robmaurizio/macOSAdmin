@@ -183,7 +183,7 @@ echo "\nPerform Computer Onboarding standard workflow..."
 dialogRUN="$dialogBinary -s --title \"Computer Setup\" \
 --message \"Welcome!\n\nYour computer will need about 30-40 minutes to get ready. Please connect to power and do NOT close the lid or shut down.\" \
 --icon \"/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/FinderIcon.icns\" \
---progress 14 \
+--progress 15 \
 --progresstext ""Initializing configuration…"" \
 --button1text \"Please Wait\" \
 --button1disabled \
@@ -219,77 +219,83 @@ echo "progresstext: Gathering info..." >> "$dialog_command_file"
 echo "\nCall Jamf Recon..."
 /usr/local/bin/jamf recon
 
-# Install Remote Assistance Software
+# Install Google Chrome
+echo "\Install Google Chrome..."
 echo "progress: 4" >> "$dialog_command_file"
+echo "progresstext: Chrome browser..." >> "$dialog_command_file"
+jamf policy -event Install-GoogleChrome -verbose
+
+# Install Remote Assistance Software
+echo "progress: 5" >> "$dialog_command_file"
 echo "progresstext: Insalling remote assistance..." >> "$dialog_command_file"
 #echo "\nCall Jamf Policy via custom trigger to install ConnectWise Control (ScreenConnect)..."
 jamf policy -event Install-ConnectWiseControl -verbose
 sleep 1
 
 # Install Watchman
-echo "progress: 5" >> "$dialog_command_file"
+echo "progress: 6" >> "$dialog_command_file"
 echo "progresstext: Registering with fleet health..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to install and register the Watchman Agent..."
 jamf policy -event Install-Watchman -verbose
 sleep 3
 
 # Create Admin Accounts
-echo "progress: 6" >> "$dialog_command_file"
+echo "progress: 7" >> "$dialog_command_file"
 echo "progresstext: Creating administrator accounts..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to deploy the client admin user..."
 jamf policy -event Create-resmanageAccount -verbose
 sleep 1    
 
 # Create Admin Accounts
-echo "progress: 7" >> "$dialog_command_file"
+echo "progress: 8" >> "$dialog_command_file"
 echo "progresstext: Creating administrator accounts..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to deploy the internal admin user..."
 jamf policy -event Create-pointadminAccount -verbose
 sleep 1
 
 # Install Crowdstrike
-echo "progress: 8" >> "$dialog_command_file"
+echo "progress: 9" >> "$dialog_command_file"
 echo "progresstext: Installing anti-malware software..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to install and register the CrowdStrike Falcon Sensor/Agent..."
 jamf policy -event Install-CrowdstrikeFalcon -verbose
 sleep 1
 
 # Install Acronis
-echo "progress: 9" >> "$dialog_command_file"
+echo "progress: 10" >> "$dialog_command_file"
 echo "progresstext: Installing backup software..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to install and register the Acronis Cyber Protect Agent..."
 jamf policy -event Install-AcronisCyberProtect -verbose
 sleep 1
 
 # Install Managed Software
-echo "progress: 10" >> "$dialog_command_file"
+echo "progress: 11" >> "$dialog_command_file"
 echo "progresstext: Installing Orchard framework..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to install and register Orchard Update..."
 jamf policy -event Install-OrchardUpdate -verbose
 sleep 3
 
 # Insalling Managed Software
-echo "progress: 11" >> "$dialog_command_file"
+echo "progress: 12" >> "$dialog_command_file"
 echo "progresstext: Starting services..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to install managed applications..."
 jamf policy -event Install-ManagedSoftware -verbose
 sleep 3
 
 # Create ticket for new device
-echo "progress: 12" >> "$dialog_command_file"
+echo "progress: 13" >> "$dialog_command_file"
 echo "progresstext: Rubber stamping our work..." >> "$dialog_command_file"
 echo "\nCreate CW Manage Ticket for new Computer Onboarding..."
 jamf policy -event Create-CwManage-Ticket-Onboarding -verbose
 
 # Run policy
-echo "progress: 13" >> "$dialog_command_file"
+echo "progress: 14" >> "$dialog_command_file"
 echo "progresstext: Finishing up..." >> "$dialog_command_file"
 echo "\nCall Final check for policies applicable to the machine..."
 /usr/local/bin/jamf policy -verbose
 sleep 30
 
 # Remind user we're still working
-echo "progress: 13" >> "$dialog_command_file"
+echo "progress: 15" >> "$dialog_command_file"
 echo "progresstext: Just another few moments..." >> "$dialog_command_file"
 sleep 25
 
