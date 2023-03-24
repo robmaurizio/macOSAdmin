@@ -222,7 +222,7 @@ echo "\nCall Jamf Recon..."
 # Install Google Chrome
 echo "\Install Google Chrome..."
 echo "progress: 4" >> "$dialog_command_file"
-echo "progresstext: Chrome browser..." >> "$dialog_command_file"
+echo "progresstext: Installing Google Chrome browser..." >> "$dialog_command_file"
 jamf policy -event Install-GoogleChrome -verbose
 
 # Install Remote Assistance Software
@@ -257,7 +257,7 @@ sleep 1
 echo "progress: 9" >> "$dialog_command_file"
 echo "progresstext: Installing anti-malware software..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to install and register the CrowdStrike Falcon Sensor/Agent..."
-jamf policy -event Install-CrowdstrikeFalcon -verbose
+jamf policy -event Install-SentinelOne -verbose
 sleep 1
 
 # Install Acronis
