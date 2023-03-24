@@ -257,7 +257,7 @@ sleep 1
 echo "progress: 9" >> "$dialog_command_file"
 echo "progresstext: Installing anti-malware software..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to install and register the CrowdStrike Falcon Sensor/Agent..."
-jamf policy -event Install-SentinelOne -verbose
+jamf policy -event Install-CrowdstrikeFalcon -verbose
 sleep 1
 
 # Install Acronis
