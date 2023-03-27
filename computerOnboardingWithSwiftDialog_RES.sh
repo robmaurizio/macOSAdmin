@@ -36,9 +36,9 @@ caffeinate -dimsu -w $$ &
 # Validate Setup Assistant has completed
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-while pgrep -q -x "Setup Assistant" ; do
-    echo "Setup Assistant is running; pausing for 3 seconds"
-    sleep 3
+while pgrep -q -x "Setup Assistant"; do
+    echo "Setup Assistant is running; pausing..."
+    sleep 2
 done
 
 echo "Setup Assistant is no longer running; proceeding …"
@@ -47,9 +47,9 @@ echo "Setup Assistant is no longer running; proceeding …"
 # Confirm Dock is running / user is at Desktop
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-while ! pgrep -q -x "Dock" ; do
-    echo "Dock is NOT running; pausing for 3 seconds"
-    sleep 3
+until pgrep -q -x "Finder" && pgrep -q -x "Dock"; do
+    echo "Dock is NOT running; pausing..."
+    sleep 1
 done
 
 echo "Dock is running; proceeding …"
@@ -166,6 +166,7 @@ function finalize(){
   echo "button1text: Finish" >> "$dialog_command_file"
   echo "button1: enable" >> "$dialog_command_file"
   rm "$dialog_command_file"
+  wait
 }
 
 
@@ -257,7 +258,7 @@ sleep 1
 echo "progress: 9" >> "$dialog_command_file"
 echo "progresstext: Installing anti-malware software..." >> "$dialog_command_file"
 echo "\nCall Jamf Policy via custom trigger to install and register the CrowdStrike Falcon Sensor/Agent..."
-jamf policy -event Install-CrowdstrikeFalcon -verbose
+jamf policy -event Install-SentinelOne -verbose
 sleep 1
 
 # Install Acronis
