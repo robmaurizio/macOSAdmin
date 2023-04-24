@@ -131,7 +131,7 @@ TRIGGER="event"
     "Installing anti-malware software...,Install-CrowdstrikeFalcon"
     "Installing backup software...,Install-AcronisCyberProtect"
     "Rubber stamping our work...,Create-CwManage-Ticket-Onboarding"
-    "Application deployments...,Update-Policy"
+    "Application deployments - this will take some time...,Update-Policy"
     "Prepaing for the next login...,Uninstall-DEPNotify"
   )
 
