@@ -133,7 +133,7 @@ TRIGGER="event"
     "Installing Orchard framework...,Install-OrchardUpdate"
     "Starting services...,Install-ManagedSoftware"
     "Rubber stamping our work...,Create-CwManage-Ticket-Onboarding"
-    "Application deployments - this will take some time...,Update-Policy"
+    "Final security setup and policy check...,Update-Policy"
     "Prepaing for the next login...,Uninstall-DEPNotify"
   )
 
