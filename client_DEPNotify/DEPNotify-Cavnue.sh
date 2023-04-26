@@ -19,7 +19,7 @@
 # Banner image can be 600px wide by 100px high. Images will be scaled to fit
 # If this variable is left blank, the generic image will appear. If using custom Self
 # Service branding, please see the Customized Self Service Branding area below
-  BANNER_IMAGE_PATH=""
+  BANNER_IMAGE_PATH="/Library/Application Support/JAMF/CavnueSSIcon.png"
 
 # Update the variable below replacing "Organization" with the actual name of your organization. Example "ACME Corp Inc."
   ORG_NAME="Cavnue"
