@@ -36,7 +36,7 @@ sudo defaults write /Library/LaunchDaemons/removeAdmin.plist Label -string "remo
 sudo defaults write /Library/LaunchDaemons/removeAdmin.plist ProgramArguments -array -string /bin/sh -string "/Library/Application Support/JAMF/removeAdminRights.sh"
 
 # Set the run inverval to run every 7 days
-sudo defaults write /Library/LaunchDaemons/removeAdmin.plist StartInterval -integer 1800
+sudo defaults write /Library/LaunchDaemons/removeAdmin.plist StartInterval -integer 600
 
 # Set run at load
 sudo defaults write /Library/LaunchDaemons/removeAdmin.plist RunAtLoad -boolean yes
