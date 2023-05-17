@@ -21,7 +21,7 @@
 currentUser=$(who | awk '/console/{print $1}')
 echo $currentUser
 
-osascript -e 'display dialog "You now have administrative rights for 30 minutes..." buttons {"Make me an admin, please"} default button 1'
+osascript -e 'display dialog "You now have administrative rights for 30 minutes." buttons {"Make me an admin, please"} default button 1'
 
 #########################################################
 # write a daemon that will let you remove the privilege #
