@@ -1,70 +1,26 @@
-#!/bin/sh
+#!/bin/zsh
 
-####################################################################################################
-#
-# ABOUT THIS PROGRAM
-#
-# NAME
-#   setTimeServers.sh -- Set a time server.
-#
-# SYNOPSIS
-#   sudo setTimeServer.sh
-#   sudo setTimeServer.sh <mountPoint> <computerName> <currentUsername> <timeServer>
-#
-# DESCRIPTION
-#   This script will set a Time Server in the network settings for whichever network interface has
-#   been specified.
-#
-#
-# DEFINE VARIABLES & READ IN PARAMETERS
-#
-####################################################################################################
-
-# HARDCODED VALUES ARE SET HERE
-timeServer=""
-
-# CHECK TO SEE IF A VALUE WAS PASSED IN PARAMETER 4 AND, IF SO, ASSIGN TO "timeServer"
-if [ "$4" != "" ] && [ "$timeServer" == "" ]
-then
-    timeServer=$4
+# Check if the system is running macOS
+if [[ "$(uname -s)" != "Darwin" ]]; then
+  echo "This script is only compatible with macOS."
+  exit 1
 fi
 
-####################################################################################################
-#
-# SCRIPT CONTENTS - DO NOT MODIFY BELOW THIS LINE
-#
-####################################################################################################
+timeServer=$4
 
-osx=$(/usr/bin/defaults read /System/Library/CoreServices/SystemVersion ProductVersion | awk '{print $1}')
-maj=$(/usr/bin/defaults read /System/Library/CoreServices/SystemVersion ProductVersion | awk '{print substr($1,1,2)}')
-ref=$(/usr/bin/defaults read /System/Library/CoreServices/SystemVersion ProductVersion | awk '{print substr($1,4,2)}')
+# Enable Location Services
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locationd.plist
 
-if [ $maj -gt 10 ]
-then
-  echo
-  echo "Check OS string format & OS X systemsetup utility for script compatibility with OS X version $osx"
-  echo
-  exit
-fi
+# Set the time server to pool.ntp.org
+sudo systemsetup -setnetworktimeserver "$timeServer"
 
-if [ "$timeServer" != "" ]
-then
-    if [ $ref -lt 5 ]
-    then
-        echo
-        echo "Setting network time server to: $timeServer..."
-        /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Support/systemsetup -setnetworktimeserver $timeServer
-        /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Support/systemsetup -setusingnetworktime on
-        echo
-    else
-        echo
-        echo "Setting network time server to: $timeServer..."
-        /usr/sbin/systemsetup -setnetworktimeserver $timeServer
-        /usr/sbin/systemsetup -setusingnetworktime on
-        echo
-    fi
-else
-    echo
-    echo "Error:  The parameter 'timeServer' is blank.  Please specify a time server."
-    echo
-fi
+# Enable network time synchronization
+sudo systemsetup -setusingnetworktime on
+
+# Display the updated time server setting
+echo "Time server set to: $(sudo systemsetup -getnetworktimeserver)"
+
+# Update the system clock
+sudo sntp -sS $timeServer
+
+echo "Location Services and time server configuration completed."
