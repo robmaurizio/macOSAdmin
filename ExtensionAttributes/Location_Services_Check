@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+test=$( defaults read /var/db/locationd/Library/Preferences/ByHost/com.apple.locationd LocationServicesEnabled )
+
+[ "$test" = "1" ] && echo "<result>Enabled</result>" || echo "<result>Disabled</result>"
